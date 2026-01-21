@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desktop OS - Portfolio</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="desktop">
+        <!-- Desktop Icons -->
+        <div class="desktop-icon" data-app="notepad">
+            <div class="icon">📝</div>
+            <div class="icon-label">Notepad</div>
+        </div>
+        <div class="desktop-icon" data-app="calculator">
+            <div class="icon">🔢</div>
+            <div class="icon-label">Calculator</div>
+        </div>
+        <div class="desktop-icon" data-app="browser">
+            <div class="icon">🌐</div>
+            <div class="icon-label">Browser</div>
+        </div>
+        <div class="desktop-icon" data-app="about">
+            <div class="icon">👤</div>
+            <div class="icon-label">About Me</div>
+        </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div id="taskbar">
+        <div id="start-menu">
+            <button id="start-button">🏠 Start</button>
+        </div>
+        <div id="taskbar-apps"></div>
+        <div id="taskbar-clock"></div>
+    </div>
+
+    <!-- Windows Container -->
+    <div id="windows-container"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>
