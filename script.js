@@ -201,13 +201,21 @@ function focusWindow(windowEl) {
     activeWindow = windowEl;
 }
 
+// Window ID counter for unique IDs
+let windowIdCounter = 0;
+
+// Helper function to find taskbar app by window ID
+function findTaskbarApp(windowEl) {
+    return document.querySelector(`.taskbar-app[data-window-id="${windowEl.dataset.windowId}"]`);
+}
+
 // Add taskbar app
 function addTaskbarApp(windowEl, title) {
     const taskbarApps = document.getElementById('taskbar-apps');
     const appBtn = document.createElement('button');
     appBtn.className = 'taskbar-app active';
     appBtn.textContent = title;
-    appBtn.dataset.windowId = windowEl.dataset.windowId = Date.now();
+    appBtn.dataset.windowId = windowEl.dataset.windowId = ++windowIdCounter;
     
     appBtn.addEventListener('click', () => {
         if (windowEl.style.display === 'none') {
@@ -227,7 +235,7 @@ function addTaskbarApp(windowEl, title) {
 
 // Update taskbar app
 function updateTaskbarApp(windowEl, active) {
-    const appBtn = document.querySelector(`.taskbar-app[data-window-id="${windowEl.dataset.windowId}"]`);
+    const appBtn = findTaskbarApp(windowEl);
     if (appBtn) {
         if (active) {
             appBtn.classList.add('active');
@@ -239,7 +247,7 @@ function updateTaskbarApp(windowEl, active) {
 
 // Remove taskbar app
 function removeTaskbarApp(windowEl) {
-    const appBtn = document.querySelector(`.taskbar-app[data-window-id="${windowEl.dataset.windowId}"]`);
+    const appBtn = findTaskbarApp(windowEl);
     if (appBtn) {
         appBtn.remove();
     }
@@ -429,6 +437,11 @@ function calculate(a, b, op) {
     const num1 = parseFloat(a);
     const num2 = parseFloat(b);
     
+    // Validate inputs
+    if (!isFinite(num1) || !isFinite(num2)) {
+        return 'Error';
+    }
+    
     switch(op) {
         case '+':
             return String(num1 + num2);
@@ -437,7 +450,7 @@ function calculate(a, b, op) {
         case '*':
             return String(num1 * num2);
         case '/':
-            return num2 !== 0 ? String(num1 / num2) : 'Error';
+            return (num2 !== 0 && isFinite(num2)) ? String(num1 / num2) : 'Error';
         case '%':
             return String(num1 % num2);
         default:
@@ -461,10 +474,18 @@ function initBrowser(windowEl) {
     goBtn.addEventListener('click', () => {
         let url = urlInput.value.trim();
         if (url) {
-            if (!url.startsWith('http://') && !url.startsWith('https://')) {
-                url = 'https://' + url;
+            // Validate and sanitize URL
+            try {
+                // If no protocol specified, add https://
+                if (!url.match(/^https?:\/\//i)) {
+                    url = 'https://' + url;
+                }
+                // Validate URL format
+                new URL(url);
+                frame.src = url;
+            } catch (e) {
+                alert('Invalid URL format. Please enter a valid URL.');
             }
-            frame.src = url;
         }
     });
     
